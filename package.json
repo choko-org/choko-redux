@@ -1,7 +1,7 @@
 {
   "name": "redux-boot",
-  "version": "1.1.1",
-  "description": "Minimal Framework using Redux to develop modularized universal.",
+  "version": "1.1.2",
+  "description": "Minimal Framework using Redux to develop modularized universal Apps.",
   "main": "lib/index.js",
   "scripts": {
     "build": "npm run build-es && npm run build-umd",
