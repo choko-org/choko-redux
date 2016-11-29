@@ -7,6 +7,10 @@
 ###########
 /build
 
+# Babel #
+#########
+/lib
+
 # Documentation #
 #################
 /docs/_book
