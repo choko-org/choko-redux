@@ -33,6 +33,7 @@ test('Example with a simple reducer', assert => {
     )
     assert.end()
   })
+
 })
 
 test('Example with a simple reducer and a sync middleware', assert => {
@@ -64,7 +65,9 @@ test('Example with a simple reducer and a sync middleware', assert => {
     }
   }
 
-  const modules = [testModule]
+  const modules = [
+    testModule
+  ]
 
   const app = boot(initialState, modules)
 
@@ -76,6 +79,7 @@ test('Example with a simple reducer and a sync middleware', assert => {
     )
     assert.end()
   })
+
 })
 
 test('Example with a simple reducer and an async middleware', assert => {
@@ -112,7 +116,9 @@ test('Example with a simple reducer and an async middleware', assert => {
     }
   }
 
-  const modules = [testModule]
+  const modules = [
+    testModule
+  ]
 
   const app = boot(initialState, modules)
 
@@ -124,6 +130,7 @@ test('Example with a simple reducer and an async middleware', assert => {
     )
     assert.end()
   })
+
 })
 
 test('Example with a simple reducer and an async middleware (Netflix Roulette API)', assert => {
@@ -181,7 +188,9 @@ test('Example with a simple reducer and an async middleware (Netflix Roulette AP
   }
 
   // Declare the modules you want to use.
-  const modules = [testModule]
+  const modules = [
+    testModule
+  ]
 
   // Create the App.
   const app = boot(initialState, modules)
@@ -196,6 +205,7 @@ test('Example with a simple reducer and an async middleware (Netflix Roulette AP
 
     assert.end()
   })
+
 })
 
 test('Example of reacting (side-effect) before and after an action', assert => {
@@ -204,15 +214,11 @@ test('Example of reacting (side-effect) before and after an action', assert => {
 
   const requestApiAction = createAction(REQUEST_API, async path => {
     return new Promise((resolve, reject) => {
-      setTimeout(
-        () =>
-          resolve({
+      setTimeout(() => resolve({
             id: 24,
             name: 'Irlanda'
-          }),
-        1
-      )
-    })
+          }), 1)
+      })
   })
 
   const initialState = {
@@ -259,7 +265,7 @@ test('Example of reacting (side-effect) before and after an action', assert => {
           store.getState(),
           {
             loading: false,
-            request: {id: 24, name: 'Irlanda'}
+            request: { id: 24, name: 'Irlanda' }
           },
           'loading is done'
         )
@@ -269,7 +275,10 @@ test('Example of reacting (side-effect) before and after an action', assert => {
     }
   }
 
-  const modules = [loaderModule]
+  const modules = [
+    loaderModule
+  ]
 
-  const app = boot(initialState, modules).then(() => assert.end())
+  const app = boot(initialState, modules)
+    .then(() => assert.end())
 })
