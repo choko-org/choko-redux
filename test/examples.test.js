@@ -21,9 +21,7 @@ test('Example with a simple reducer', assert => {
     }
   }
 
-  const modules = [
-    testModule
-  ]
+  const modules = [testModule]
 
   const app = boot(initialState, modules)
 
@@ -31,7 +29,7 @@ test('Example with a simple reducer', assert => {
     assert.equal(
       store.getState().foo,
       'baz',
-      "State was changed by testModule reducer during the bootstrap"
+      'State was changed by testModule reducer during the bootstrap'
     )
     assert.end()
   })
@@ -77,7 +75,7 @@ test('Example with a simple reducer and a sync middleware', assert => {
     assert.equal(
       store.getState().foo,
       'baz',
-      "State was changed by testModule reducer with data from middleware"
+      'State was changed by testModule reducer with data from middleware'
     )
     assert.end()
   })
@@ -88,7 +86,6 @@ test('Example with a simple reducer and an async middleware', assert => {
   const CHANGE_FOO = 'redux-boot/test/CHANGE_FOO'
 
   const changeFoo = createAction(CHANGE_FOO, async value => {
-
     return new Promise((resolve, reject) => {
       setTimeout(() => resolve(value), 1)
     })
@@ -129,28 +126,25 @@ test('Example with a simple reducer and an async middleware', assert => {
     assert.equal(
       store.getState().foo,
       'baz',
-      "State was changed by testModule reducer with data from async middleware"
+      'State was changed by testModule reducer with data from async middleware'
     )
     assert.end()
   })
 
 })
 
-test('Example with a simple reducer and an async middleware (Spotify API)', assert => {
-
+test('Example with a simple reducer and an async middleware (Netflix Roulette API)', assert => {
   // Declare the initial state of your App.
   const initialState = {
-    artist: ''
+    movie: ''
   }
 
-  const SPOTIFY_SEARCH = 'redux-boot/test/SPOTIFY_SEARCH'
+  const NETFLIX_SEARCH = 'redux-boot/test/NETFLIX_SEARCH'
 
-  const spotifySearchAction = createAction(SPOTIFY_SEARCH, async (name, type) => {
-
-    const result = await axios.get('https://api.spotify.com/v1/search', {
+  const netflixSearchAction = createAction(NETFLIX_SEARCH, async title => {
+    const result = await axios.get('http://netflixroulette.net/api/api.php', {
       params: {
-        q: name,
-        type: type
+        title: title
       }
     })
 
@@ -159,18 +153,15 @@ test('Example with a simple reducer and an async middleware (Spotify API)', asse
 
   // Declare your module.
   const testModule = {
-
     // Reducers handlers.
     reducer: {
-
       // Modify state reacting to a Spotify Search.
-      [SPOTIFY_SEARCH]: {
+      [NETFLIX_SEARCH]: {
         // The search was a success.
         next(state, action) {
-          const firstArtist = action.payload.data.artists.items[0]
           return {
             ...state,
-            artist: firstArtist.name
+            movie: action.payload.data.show_title
           }
         },
         // The search was a failure.
@@ -184,18 +175,16 @@ test('Example with a simple reducer and an async middleware (Spotify API)', asse
     // Middleware handlers.
     middleware: {
       [BOOT]: store => next => async action => {
-
         const nextResult = next(action)
 
         // Dispatch a side-effect action to alter (create) the state.
         // In this case we are searching for an artist which the name
         // starts with "led".
-        await store.dispatch(spotifySearchAction('led', 'artist'))
+        await store.dispatch(netflixSearchAction('breaking bad'))
 
         return nextResult
       }
     }
-
   }
 
   // Declare the modules you want to use.
@@ -208,29 +197,28 @@ test('Example with a simple reducer and an async middleware (Spotify API)', asse
 
   // When the App is
   app.then(({action, store}) => {
-
     assert.equal(
-      store.getState().artist,
-      'Led Zeppelin',
+      store.getState().movie,
+      'Breaking Bad',
       'A side-effect of BOOT action modified the state using a middleware and reducer handler.'
     )
 
     assert.end()
   })
+
 })
 
 test('Example of reacting (side-effect) before and after an action', assert => {
-
   const REQUEST_API = 'redux-boot/test/REQUEST_API'
   const LOADING = 'redux-boot/test/LOADING'
 
   const requestApiAction = createAction(REQUEST_API, async path => {
     return new Promise((resolve, reject) => {
       setTimeout(() => resolve({
-        id: 24,
-        name: 'Irlanda'
-      }), 1)
-    })
+            id: 24,
+            name: 'Irlanda'
+          }), 1)
+      })
   })
 
   const initialState = {
@@ -254,13 +242,11 @@ test('Example of reacting (side-effect) before and after an action', assert => {
     },
     middleware: {
       [BOOT]: store => next => action => {
-        
         store.dispatch(requestApiAction('user/23'))
 
         return next(action)
       },
       [REQUEST_API]: store => next => action => {
-
         // Show the loader.
         store.dispatch({type: LOADING, payload: true})
 
