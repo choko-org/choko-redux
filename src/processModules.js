@@ -11,10 +11,10 @@ export default function processModules(modules) {
 
   const middlewares = modules
     .filter(module => (
-        typeof module.middleware == 'function' || typeof module.middleware == 'object'
+      typeof module.middleware == 'function' || typeof module.middleware == 'object'
     ))
     .map(module => (
-        typeof module.middleware == 'function' ? module.middleware : handleMiddlewares(module.middleware)
+      typeof module.middleware == 'function' ? module.middleware : handleMiddlewares(module.middleware)
     ))
 
   const enhancers = modules
