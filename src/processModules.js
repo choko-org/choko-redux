@@ -31,12 +31,20 @@ export default function processModules(modules) {
 }
 
 export function handleMiddlewares(listeners) {
-  return store => next => action => {
-    // Execute action listeners, if any was set for the current action.
-    if (listeners[action.type]) {
-      return listeners[action.type](store)(next)(action)
-    }
+  return store => {
+    const middlewares = Object.keys(listeners).map(type => {
+      return { type, middleware: listeners[type](store) }
+    })
 
-    return next(action)
+    return next => action => {
+      const matched = middlewares
+        .find(({ type }) => type === action.type)
+
+      if (!matched) {
+        return next(action)
+      }
+
+      return matched.middleware(next)(action)
+    }
   }
 }
