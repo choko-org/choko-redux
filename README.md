@@ -3,6 +3,8 @@
 Modular [Redux](http://redux.js.org) bootstrap with asynchronous side-effects.
 
 [![Build Status](https://travis-ci.org/choko-org/redux-boot.svg?branch=master)](https://travis-ci.org/choko-org/redux-boot)
+[![sponsored by Taller](https://raw.githubusercontent.com/TallerWebSolutions/tallerwebsolutions.github.io/master/sponsored-by-taller.png
+)](https://taller.net.br/en/)
 
 ## What is Redux Boot?
 
