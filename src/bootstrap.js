@@ -5,12 +5,14 @@ import configureStore from './configureStore'
 export const BOOT = 'redux-boot/BOOT'
 
 export default function boot(initialState = {}, modules = []) {
-  const {reducers, middlewares, enhancers} = processModules(modules)
+  const {reducers, middlewares, enhancers, initialState: modulesInitialState} = processModules(modules)
 
-  let store = configureStore(initialState, reducers, middlewares, enhancers)
+  const state = {...initialState, ...modulesInitialState}
+
+  let store = configureStore(state, reducers, middlewares, enhancers)
 
   return store
-    .dispatch(bootAction(initialState))
+    .dispatch(bootAction(state))
     .then(action => {
       return {
         action,

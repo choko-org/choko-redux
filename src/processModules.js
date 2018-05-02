@@ -23,10 +23,15 @@ export default function processModules(modules) {
     ))
     .map(module => module.enhancer)
 
+  const initialState = modules
+    .map(module => module.initialState || (f => f))
+    .reduce((state, initialState) => initialState(state), {})
+
   return {
     reducers,
     middlewares,
-    enhancers
+    enhancers,
+    initialState,
   }
 }
 
